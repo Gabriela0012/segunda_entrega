@@ -2,7 +2,7 @@
 ##Dependencias
 >>moment\
 >>nodemon\
->>mongoose
+>>mongoose\
 >>express
 ## Levantar npm
 >> npm start
