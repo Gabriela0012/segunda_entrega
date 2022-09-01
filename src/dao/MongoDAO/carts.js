@@ -40,9 +40,8 @@ export default class Carts extends MongoDBContainer {
     let product = await products.getById(id)
     console.log(quantity)
     console.log(product)
-
-
-      await this.model.updateOne(conditions,{products:(product={name:product.name,
+   
+      await this.model.updateOne(conditions, {products:(product={name:product.name,
         price:product.price, id:product.id, timestamp:product.timestamp, quantity})})
 
     
@@ -59,9 +58,7 @@ export default class Carts extends MongoDBContainer {
       return false
       
     }
-
   }
-
 
   
 
