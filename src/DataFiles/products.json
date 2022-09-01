@@ -1,0 +1,22 @@
+[
+	{
+		"name": "short verde",
+		"price": "2500",
+		"thumbnail": "https://http2.mlstatic.com/D_NQ_NP_814179-MLA51014449326_082022-W.jpg",
+		"description": "short blancoo de jeans para mujer",
+		"code": "s8ddun41hh8fghj2451s",
+		"stock": " 8",
+		"id": 1,
+		"timestamp": "2022-08-30 12:40:11"
+	},
+	{
+		"name": "short gris",
+		"price": "7800",
+		"thumbnail": "https://http2.mlstatic.com/D_NQ_NP_814179-MLA51014449326_082022-W.jpg",
+		"description": "short blancoo de jeans para mujer",
+		"code": "s8ddun41hh8fghj2451s",
+		"stock": " 8",
+		"id": 2,
+		"timestamp": "2022-08-30 12:40:15"
+	}
+]
