@@ -13,7 +13,7 @@ export default class MemoryContainer{
     return this.data;
   }
  
-  save= async(object)  =>{   
+  save = async(object)  =>{   
     const data = await this.getAll();
     if (data.length) {
         const results= await { ...object, id: data[data.length-1].id+1, timestamp:moments };

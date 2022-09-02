@@ -6,7 +6,7 @@ const moments = moment().format('YYYY-MM-DD HH:mm:ss');
 
 export default class Products extends MemoryContainer{
 
-  saveCart = (product) => {
+  save = (product) => {
     if (this.data.length === 0) {
         product.id = 1
         product.timestamp = moments

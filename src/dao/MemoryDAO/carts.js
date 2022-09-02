@@ -16,6 +16,7 @@ export default class Carts extends MemoryContainer{
     this.save(cart)
     return cart.id
   }
+
   updateCart = (cid, pid, qty) => {
     let cart = this.getById(cid)
     if(cart.products.some(e => e.id === pid)){
@@ -38,6 +39,8 @@ export default class Carts extends MemoryContainer{
     }
     this.update(cart)
   }
+
+  //borrar el producto del carrito
   deleteProductCart = (cid, pid) => {
     let cart = this.getById(cid)
 

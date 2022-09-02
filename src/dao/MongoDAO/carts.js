@@ -25,21 +25,25 @@ export default class Carts extends MongoDBContainer {
     this.pepe = 0
   }
 
+  // creacion del carrito
   saveCart = async (document)=>{
     let results = await this.model.create(document);
     return results;
   }
+
+  //buscarlo por Id
   getById = async(id) => {
     let result = await this.model.findById({_id:id});
     return result;
   }
 
-
+  // Eliminar carrito de carritos
   deleteById = async(id) => {
     let conditions = {_id:id}
     await this.model.deleteOne(conditions)
   }
   
+  // Agregar un producto al carrito elegido por Id
   updateCart = async (cid, pid, qty) => {
     let cart = await this.getById(cid)
     console.log(cart)
@@ -75,7 +79,7 @@ export default class Carts extends MongoDBContainer {
   }
 
   
-
+  // Eliminar el producto del carrito
   deleteProductCart = async (cid, pid) => {
     let cart = await this.getById(cid)
 

@@ -25,23 +25,24 @@ export default class Products extends MongoDBContainer {
   constructor(){
     super(collection,productsSchema);
   }
+
+  // Buscar pot Id el producto
   getById = async(id) => {
     let result = await this.model.findById({_id:id});
     return result;
       
   }
+
+  //Actualizar el producto que es buscado por Id
   update = async(id, body)=>{
     let conditions = {_id:id}
     await this.model.updateOne(conditions, body)
   }
 
+  // Eliminar producto por Id
   deleteById = async(id) => {
     let conditions = {_id:id}
     await this.model.deleteOne(conditions)
   }
-  getByIdP= async(id) => {
-    let result = await this.model.findById(id);
-    return result;
-      
-  }
+ 
 }

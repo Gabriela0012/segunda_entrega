@@ -23,18 +23,18 @@ export default class Carts extends FilesContainer {
     try{
       let carts = await this.getAll();
       if(carts.length===0){
-          cart.id=1;
-          cart.timestamp= moments;
-          cart.products=[];
+        cart.id=1;
+        cart.timestamp= moments;
+        cart.products=[];
           
-          carts.push(cart);
-          await this.save(cart)
+        carts.push(cart);
+        await this.save(cart)
       }else{
-          cart.id = carts[carts.length-1].id+1;
-          cart.products=[];
-          cart.timestamp= moments;
-          carts.push(cart);
-          await this.save(cart)
+        cart.id = carts[carts.length-1].id+1;
+        cart.products=[];
+        cart.timestamp= moments;
+        carts.push(cart);
+        await this.save(cart)
       }
     }catch(error){
       console.log("Cannot write file: "+error)
@@ -67,31 +67,25 @@ export default class Carts extends FilesContainer {
   }
 
 
- 
+ //  borrar el producto del carrito
+  deleteProductCart = async (cid, pid) => {
+    let cart = await this.getById(cid)
 
+    let newCartProduts = []
 
-  
-
- //  borrar un producto del carrito
- deleteProductCart = async (cid, pid) => {
-  let cart = await this.getById(cid)
-
-  let newCartProduts = []
-
-  if(cart.products.some(e =>e.id === pid)){
-      for (const item of cart.products){
-          if(item.id === pid){
-              continue
-          }
-          newCartProduts.push(item)
-      }
+    if(cart.products.some(e =>e.id === pid)){
+        for (const item of cart.products){
+            if(item.id === pid){
+                continue
+            }
+            newCartProduts.push(item)
+        }
+    }
+    cart.products = newCartProduts
+    await this.update(cart)
+    
   }
-  cart.products = newCartProduts
-  await this.update(cart)
-  
-}
 
-  
   
 
 }
