@@ -20,3 +20,6 @@ Para las rutas de ApiProducts(https://go.postman.co/workspace/Team-Workspace~9f6
 Para las rutas de ApiCarts(https://go.postman.co/workspace/Team-Workspace~9f658cc4-8b00-4215-8671-5751dcc9a926/collection/22122420-87914e90-eac1-4a4c-ae89-5c5263e186fe?action=share&creator=22122420)
 .Para restringir el acceso se Creo una variable Admin en el archivo 'app.js',la cual si esta en (true), puede modificar el producto, y si esta en (false) lo restringe.
 
+
+
+pd: Carlos esta todo hice las pruebas y me salio, el tema del id me ayudaron los compañeros pero lo saque.
