@@ -24,6 +24,11 @@ export default class Carts extends MongoDBContainer {
     super(collection,cartsSchema);
     this.pepe = 0
   }
+
+  saveCart = async (document)=>{
+    let results = await this.model.create(document);
+    return results;
+  }
   getById = async(id) => {
     let result = await this.model.findById({_id:id});
     return result;

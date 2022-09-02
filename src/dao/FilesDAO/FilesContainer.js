@@ -12,60 +12,46 @@ export default class FilesContainer {
     
   }
 
-  save= async(object)  =>{   
-    const data = await this.getAll();
-    if (data.length) {
-        const results= await { ...object, id: data[data.length-1].id+1, timestamp:moments };
-        data.push(results);
+  getAll = async () => {
+    if (fs.existsSync(this.path)) {
+        let fileData = await fs.promises.readFile(this.path, 'utf-8')
+        let products = JSON.parse(fileData)
+        return products
     } else {
-        const results = await { ...object, id: 1, timestamp: moments};
-        data.push(results);
-    }
-    return await this.saveData(data) 
-  }
-  getAll = async()=> {
-    return  await this.getData()
-  }
-  getData= async()=> {
-    try{
-        if(fs.existsSync(this.path )){
-            const data = await fs.promises.readFile(this.path , 'utf-8');
-            return JSON.parse(data)
-        }else{
-            return [];
-        }
-    }
-    catch(e){
-        console.warn(`Fix : ${e}`)
-        return[];
+        return []
     }
   }
-  saveData= async(data)=> {
-    try{
-        await fs.promises.writeFile(this.path , JSON.stringify(data, null, '\t'));
-    }
-    catch(e){
-        console.warn(`Fix : ${e}`)
-    }
+
+  save = async (element) => {
+    let data = await this.getAll()
+    data.push(element)
+    await fs.promises.writeFile(this.path, JSON.stringify(data, null, '\t'))
+    return element.id
   }
-  deleteById= async(id)=> {
-    const data = await this.getAll();
-    const nuevoArray = data.filter( result => result.id != id);
-    await this.saveData(nuevoArray);
+
+  getById = async (id) => {
+    let list = await this.getAll()
+    let result = list.find((element) => element.id == id)
+    return result
   }
+
+  deleteById = async (id) => {
+    let list = await this.getAll()
+    let newData = list.filter((element) => element.id != id)
+    await fs.promises.writeFile(this.path, JSON.stringify(newData, null, '\t'))
+  }
+
   update = async (object) => {
-    let list = await this.getAll();
-    let index = list.findIndex((element) => element.id === object.id);
-    list[index] = object;
-    await fs.promises.writeFile(this.path, JSON.stringify(list, null, "\t"));
-    return true;
-  };
+    let list = await this.getAll()
+    let index = list.findIndex((element) => element.id == object.id)
+    list[index] = object
+    await fs.promises.writeFile(this.path, JSON.stringify(list, null, '\t'))
+    return true
+  }
 
-  deleteAll= async()=> {
-    const arrayEmpty = []
-    await this.saveData(arrayEmpty);
-}
-
+  deleteAll = async ()=>{
+    await fs.promises.writeFile(this.path, JSON.stringify([], null, '\t'))
+  }
 
  
 
