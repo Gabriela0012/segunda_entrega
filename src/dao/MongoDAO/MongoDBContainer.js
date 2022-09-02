@@ -19,5 +19,14 @@ export default class MongoContainer{
     let results = await this.model.create(document);
   return results;
   }
+  update = async (object) => {
+    let id = object.id
+    delete object.id
+    await this.model.updateOne({_id:id}, {$set:object})
+  }
+
+  deleteAll = async ()=>{
+    await this.modelService.deleteAll()
+  }
   
 }

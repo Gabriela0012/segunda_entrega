@@ -2,10 +2,12 @@ import FilesContainer from './FilesContainer.js'
 import __dirname from '../../utils.js'
 import moment from 'moment'
 import fs from 'fs'
+import Products from './products.js'
 
 // const productService = new productContainer();
 // const path = "src/files/carts.json"
 const moments = moment().format('YYYY-MM-DD HH:mm:ss');
+const productsService = new Products();
 
 export default class Carts extends FilesContainer {
   constructor() { 
@@ -50,67 +52,53 @@ export default class Carts extends FilesContainer {
       console.log('GetById: '+error)
       return null
     }
-  } 
- 
+  }
 
-
-  // // añadir un producto al carrito
-  // addProductCart = async (cid, pid, quantity) => {
-  //   let product = await productService.getById(pid)
+  updateCart =  async (cid, pid, qty) => {
+    let cart = await this.getById(cid);
+    if (cart.products.some((e) => e.id === pid)) {
+      for (const item of cart.products) {
+        if (item.id === pid) {
+          let condition = Number(item.quantity) + qty;
+          if (condition < 1) {
+            item.quantity = 1;
+          } else {
+            item.quantity = condition.toString();
+          }
+        }
+      }
+    } else {
+      if (qty < 1) {
+        throw new Error("Cart manager error:{addProductCart} invalid quantity");
+      } else {
+        cart.products.push({ id: pid, quantity: qty });
+      }
+    }
+    await this.update(cart);
+  }
   
-  //   if(product === null){
-  //     throw new Error("the product doesn't exist")
-  //   }else{
-  //     try {
-  //       let cart = await this.getById(cid)
-  //       if(cart.products.some(e =>e.id === pid)){
-  //           for (const item of cart.products){
-  //               if(item.id === pid){
-  //                   let condition = (item.quantity += quantity)
-  //                   if(condition < 1){
-  //                       item.quantity = 1
-  //                   }else{
-  //                       item.quantity = condition
-  //                   }
-  //               }
-  //           }
-  //       }else{
-  //           if(quantity < 1){
-  //               throw new Error("Cart manager error:{addProductCart} invalid quantity")
-  //           }else{
-  //               cart.products.push({id:pid, quantity})
-  //           }
-  //       }
-  //     await this.updateCarts(cart)
-  //     } catch (error) {
-  //       console.log("Cart manager error:{addProductCart} could be cart doesn't exist yet")
-  //       console.log(error)
-  //     }   
-  //   }
-  // }
-
-  // // actualizar carrito
-  // updateCarts = async (cart)=>{
-  //   try {
-  //     let arrayCarts = await this.getAllCarts()
-  //     let newCarts = []
-  //     for(const item of arrayCarts){
-  //       if(item.id===cart.id){
-  //         newCarts.push(cart)
-  //         continue
-  //       }
-  //       newCarts.push(item)
+  // actualizar carrito
+  updateCarts = async (cart)=>{
+    try {
+      let arrayCarts = await this.getAllCarts()
+      let newCarts = []
+      for(const item of arrayCarts){
+        if(item.id===cart.id){
+          newCarts.push(cart)
+          continue
+        }
+        newCarts.push(item)
           
-  //     }
-  //     await fs.promises.writeFile(path,JSON.stringify(newCarts,null,'\t'));
+      }
+      await fs.promises.writeFile(path,JSON.stringify(newCarts,null,'\t'));
     
         
-  //   } catch (error) {
-  //       console.log('cart manager error, UpdateCarts')
-  //       console.log(error)
-  //   }
-  // }
-
+    } catch (error) {
+        console.log('cart manager error, UpdateCarts')
+        console.log(error)
+    }
+  }
+ 
   // //  borrar un producto del carrito
   // deleteProductCart = async (cid, pid) => {
   //   let cart = await this.getById(cid)

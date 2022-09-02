@@ -35,28 +35,57 @@ export default class Carts extends MongoDBContainer {
     await this.model.deleteOne(conditions)
   }
   
-  updateCart = async(cid, id, quantity) => {
-    let conditions = {_id:cid}
-    let product = await products.getById(id)
-    console.log(quantity)
-    console.log(product)
-   
-      await this.model.updateOne(conditions, {products:(product={name:product.name,
-        price:product.price, id:product.id, timestamp:product.timestamp, quantity})})
+  updateCart = async (cid, pid, qty) => {
+    let cart = await this.getById(cid)
+    console.log(cart)
 
-    
+    if(!cart.products){
+      if(qty < 1){
+        throw new Error("Cart manager error:{addProductCart} invalid quantity")
+      }else{
+        cart.products.push({id:pid, quantity:qty})
+      }
+    }else{
+      if(cart.products.some(e => e.id === pid)){
+        for (const item of cart.products){
+          if(item.id === pid){
+            let condition = (item.quantity += qty)
+            if(condition < 1){
+                item.quantity = 1
+            }else{
+                item.quantity = condition
+            }
+          }  
+        }
+      }else{
+        if(qty < 1){
+          throw new Error("Cart manager error:{updateCart} invalid quantity")
+        }else{
+          cart.products.push({id:pid, quantity:qty})
+        }
+      }
+        
+    }
+    await this.update(cart)
   }
+
   
 
   deleteProductCart = async (cid, pid) => {
-    let conditions = {_id:cid}
-    let productID = await products.getById(pid)
+    let cart = await this.getById(cid)
 
-    if (conditions===cid) {
-      await this.model.deleteOne(productID)
-    } else {
-      return false
-      
+    let newCartProduts = []
+
+    if(cart.products.some(e =>e.id === pid)){
+      for (const item of cart.products){
+        if(item.id === pid){
+            continue
+        }
+        newCartProduts.push(item)
+      }
+      cart.products = newCartProduts
+      this.update(cart)
+        
     }
   }
 

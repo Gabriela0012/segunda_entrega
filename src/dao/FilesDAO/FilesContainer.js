@@ -53,22 +53,13 @@ export default class FilesContainer {
     const nuevoArray = data.filter( result => result.id != id);
     await this.saveData(nuevoArray);
   }
-  update = async(id, body)=>{
-    let name = body.name;
-    let price = body.price;
- 
-    let productsArray = await this.getAll()
-    productsArray.map(function(item){
-       if(item.id == id){
-         item.name = name,
-         item.price = price
- 
-       }
-    })
-    console.log(name, price)
-    console.log(productsArray)
-    await fs.promises.writeFile(this.path,JSON.stringify(productsArray, null, '\t'))
-  }
+  update = async (object) => {
+    let list = await this.getAll();
+    let index = list.findIndex((element) => element.id === object.id);
+    list[index] = object;
+    await fs.promises.writeFile(this.path, JSON.stringify(list, null, "\t"));
+    return true;
+  };
 
   deleteAll= async()=> {
     const arrayEmpty = []

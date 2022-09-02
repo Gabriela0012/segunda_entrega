@@ -54,40 +54,44 @@ router.get('/:cid',validateID, async(req, res)=>{
 
 
 // agregar productos por Id
-router.post('/:cid/products', async (req,res)=>{
-  const {id, quantity} = req.body
-  if(!id||!quantity){
-      return res.status(300).send({status:'error', error:"blank spaces are NOT allowed"})
+router.post("/:cid/products", async (req, res) => {
+    const { id, quantity } = req.body;
+    if (!id || !quantity) {
+      return res.status(300).send({ status: "error", error: "blank spaces are NOT allowed" });
+    } else {
+      try {
+        await services.cartsService.updateCart(req.params.cid,id,Number(quantity));
+        res.send({status: "success",message: "successfully saved into the cart",});
+      } catch (error) {
+        return res.status(500).send({status: "error",error: "it couldn't upload the product into the cart",});
+      }
+    }
+  })
+
+// // eliminar productos del carrito 
+router.delete('/:cid/products/:pid', async (req,res)=>{
+  let cart = await services.cartsService.getById(req.params.cid)
+  let product = await services.productsService.getById(req.params.pid)
+  if(cart==null){
+      return res.status(404).send({status:'error', error:"cart doesn't exist"})
+  }else if(product == null){
+      return res.status(404).send({status:'error', error:"product doesn't exist"})
   }else{
-      let cart = await services.cartsService.getById(req.params.cid)
-      if(cart === null){
-          return res.status(404).send({status:'error', error:"cart doesn't exist"})
-      }else{
-          try {
-              await services.cartsService.updateCart(req.params.cid,id,quantity)
-              res.send({status:'success',message:'successfully saved into the cart'})
-          } catch (error) {
-              return res.status(500).send({status:'error', error:"it couldn't upload the product into the cart"})
-          }
+      try {
+          await services.cartsService.deleteProductCart(req.params.cid,req.params.pid)
+          res.send({status:'success',message:'successfully deleted from cart'})
+      } catch (error) {
+          return res.status(500).send({status:'error', error:"it couldn't delete the product from the cart"})
       }
   }
 })
 
-// // eliminar productos del carrito 
-// router.delete('/:cid/products/:pid', async (req,res)=>{
-//   let cart = await services.cartsService.getById(req.params.cid)
-//   let product = await services.productsService.getById(req.params.pid)
-//   if(cart==null){
-//       return res.status(404).send({status:'error', error:"cart doesn't exist"})
-//   }else if(product == null){
-//       return res.status(404).send({status:'error', error:"product doesn't exist"})
-//   }else{
-//       try {
-//           await services.cartsService.deleteProductCart(req.params.cid,req.params.pid)
-//           res.send({status:'success',message:'successfully deleted from cart'})
-//       } catch (error) {
-//           return res.status(500).send({status:'error', error:"it couldn't delete the product from the cart"})
-//       }
+// router.delete('/:cid/products/:pid', validateCid, validatePid, async (req,res)=>{
+//   try {
+//       await services.CartService.deleteProductFromCart(req.params.cid, req.params.pid)
+//       res.send({status:'success',message:'successfully deleted from cart'})
+//   } catch (error) {
+//       return res.status(500).send({status:'error', error:"it couldn't delete the product from the cart"})
 //   }
 // })
 
